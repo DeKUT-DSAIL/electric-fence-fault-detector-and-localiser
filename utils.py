@@ -1,11 +1,10 @@
-# This module contains essential functions
-# This module contain functions needed
-# for signal visualisation.
+# This module contain functions needed for signal visualisation.
 
 
 import os
 import numpy as np
 import pandas as pd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
@@ -40,6 +39,28 @@ def file_loader(paths):
             return v
         else:
             print('Invalid file. Searching for another file')
+            
+
+def graph_plot(x, y, s_indx, e_indx, plot_title, fig_size):
+    """Plots graph of x against y
+    Args: x- independent variable (time)
+          y- dependent variable (voltage)
+          plot_title- title of the plot
+          x_label- x axis label
+          y_label- y axis label
+          fig_size- size of figure (float, float)
+    """
+    
+    plt.figure(figsize=fig_size)
+    plt.plot(x[s_indx: e_indx], y[s_indx: e_indx])
+    plt.axhline(color = 'red', linewidth=2)
+    plt.xlabel('$Time\ (ms)$', fontsize=15)
+    plt.ylabel('$Voltage\ (V)$', fontsize=15)
+    plt.title(plot_title, fontsize=15)
+    plt.show()
+    
+    
+          
 
 
 def single_plot(v, t, plot_title):
@@ -49,15 +70,10 @@ def single_plot(v, t, plot_title):
           plot_title - title of the plot
     """
 
-    plt.figure(figsize=(10,5))
-    plt.plot(t[:], v[:])
-    plt.axhline(color = 'red', linewidth=2)
-    plt.xlabel('$Time\ (ms)$', fontsize=15)
-    plt.ylabel('$Voltage\ (V)$', fontsize=15)
-    plt.title(plot_title, fontsize=15)
-    #plt.savefig('images/short_2_6.png', dpi=300)
-    plt.show()
-    print('Sum of sampled values = ', np.sum(v))
+    fig_size = (10,5)
+    x, y = t, v
+    s_indx, e_indx = 0, len(v)
+    graph_plot(x, y, s_indx, e_indx, plot_title, fig_size)
 
     
     
@@ -92,7 +108,9 @@ def edges_plots(v, t, edges, win_size, prior_samples):
           win_size- window size
           prior_samples- number of samples prior the edge
     """
-
+    
+    x, y = t, v
+    fig_size = mpl.rcParams['figure.figsize']
     for edge in edges:
         if 'rising' in edge:
             plot_title = 'Rising edge'
@@ -103,22 +121,12 @@ def edges_plots(v, t, edges, win_size, prior_samples):
                 if s_indx < 0:
                     s_indx = 0
 
-                if np.sum(v) < 5000:
-                    if np.max(v[s_indx: e_indx]) > 1:
-                        plt.plot(t[s_indx: e_indx], v[s_indx: e_indx])
-                        plt.axhline(color = 'red', linewidth=2)
-                        plt.xlabel('$Time\ (ms)$', fontsize=15)
-                        plt.ylabel('$Voltage\ (V)$', fontsize=15)
-                        plt.title(plot_title, fontsize=15)
-                        plt.show()
+                if np.sum(v) < 5000: #short circuit signals
+                    if np.max(v[s_indx: e_indx]) > 1: # filter out bus conflicted signals 
+                        graph_plot(x, y, s_indx, e_indx, plot_title, fig_size)
 
-                else:
-                    plt.plot(t[s_indx: e_indx], v[s_indx: e_indx])
-                    plt.axhline(color = 'red', linewidth=2)
-                    plt.xlabel('$Time\ (ms)$', fontsize=15)
-                    plt.ylabel('$Voltage\ (V)$', fontsize=15)
-                    plt.title(plot_title, fontsize=15)
-                    plt.show()
+                else: #open circuit signals
+                    graph_plot(x, y, s_indx, e_indx, plot_title, fig_size)
 
         else:
             plot_title = 'Falling edge'
@@ -129,22 +137,12 @@ def edges_plots(v, t, edges, win_size, prior_samples):
                 if s_indx < 0:
                     s_indx = 0
 
-                if np.sum(v) < 5000:
+                if np.sum(v) < 5000: #short circuit signals
                     if np.min(v[s_indx: e_indx]) < -1:
-                        plt.plot(t[s_indx: e_indx], v[s_indx: e_indx])
-                        plt.axhline(color = 'red', linewidth=2)
-                        plt.xlabel('$Time\ (ms)$', fontsize=15)
-                        plt.ylabel('$Voltage\ (V)$', fontsize=15)
-                        plt.title(plot_title, fontsize=15)
-                        plt.show()
+                        graph_plot(x, y, s_indx, e_indx, plot_title, fig_size)
 
                 else:
-                    plt.plot(t[s_indx: e_indx], v[s_indx: e_indx])
-                    plt.axhline(color = 'red', linewidth=2)
-                    plt.xlabel('$Time\ (ms)$', fontsize=15)
-                    plt.ylabel('$Voltage\ (V)$', fontsize=15)
-                    plt.title(plot_title, fontsize=15)
-                    plt.show()
+                    graph_plot(x, y, s_indx, e_indx, plot_title, fig_size)
 
                     
             
