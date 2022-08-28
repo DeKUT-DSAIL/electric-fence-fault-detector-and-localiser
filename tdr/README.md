@@ -1,6 +1,3 @@
-# Electric Fence Fault Detector and Localiser
+# TDR
 
-Electric fences are used to establish protected areas (PAs), in agriculture, installations requiring enhanced security like military installations and homes. These fences are prone to faults that affect their effectiveness. Fences used in PAs, especially, are very long. Manual inspection of these fences is labor intensive, time consuming and inefficient. In this project, we are developing a cheap device to remotely monitor electric fences and help in detecting and localising faults in them. The device will employ the concept of **Time Domain Reflectometry (TDR)**. TDR involves sending a pulse down a cable and analysing the reflected signal to detect faults, determine the type of faults and their point of occurrence. The device will be based on the Raspberry Pi single board computer. The main components that comprises the system are:
-1. The Raspberry Pi
-2. An ultrafast analogue to digital converter (ADC)
-3. A pulse (a Schmitt trigger pulse) generator 
+This directory contains materials used to implement a simple TDR algorithm using the data collected from an experiment carried out at the (Dedan Kimathi University of Technology Conservancy)[https://www.dkut.ac.ke/]'s electric fence. The algorithm uses numerical differentiation to detect change points detection on the sampled signals to obtain the time delay between incident and reflected signals. Using this time delay, we have computed the distance to the faults simulated at different points of the fence. Each notebook solves a maximum of two faults simulated at different points on the fence to make the notebooks shorter and easy to follow.
