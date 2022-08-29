@@ -4,3 +4,12 @@ Electric fences are used to establish protected areas (PAs), in agriculture, ins
 1. The Raspberry Pi
 2. An ultrafast analogue to digital converter (ADC)
 3. A pulse (a Schmitt trigger pulse) generator 
+
+
+<p align="center">
+  <img width="600" height="250" src="./images/labeled-tdr-system.jpg"> 
+</p>
+
+<p align="center"> 
+  <em>Figure 1: TDR system</em>
+</p>
