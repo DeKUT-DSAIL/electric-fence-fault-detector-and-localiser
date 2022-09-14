@@ -6,8 +6,9 @@ import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from collections import namedtuple
 
-
+vf_polynomial = np.poly1d(np.load('vf_polynomial.npy'))
 
 def file_paths(files_dir):
     """Generates paths to files
@@ -369,13 +370,20 @@ def time_delay(s_seg, t_seg, display=True):
     return t_delay
     
     
-def fault_point(t_delay, v_f, c=3e8):
+def fault_point(t_delay, c=3e8, short_circuit=True):
     """Computes the point of the fault
     Args: t_delay- time delay in milliseconds
-          v_f- velocity factor
           c- speed of light in vacuum in m/s
     Returns the point of fault in metres
     """
+    
+    if short_circuit:
+        v_f = vf_polynomial(t_delay)
+    
+    else:
+        v_f = .9533
+        
+    v_f = 0.9605
     
     fault_point = 0.5 * v_f * c * t_delay * 1e-3 #distance to the fault in metres
     
@@ -390,7 +398,10 @@ def eliminate_outliers(t_delays, threshold = 6.5e-5):
     #6.5e-5 >> two samples apart
     dist = np.abs(t_delays - np.median(t_delays))
     t_delays = t_delays[dist<threshold]
-    
+    for indx, t_delay in enumerate(t_delays):
+        if abs(round(t_delay - np.min(t_delays, ), 6)) == 3.2e-05:
+               t_delays[indx] = np.min(t_delays)
+
     return t_delays
 
 
@@ -422,3 +433,113 @@ def avg_delay(edges_indices, win_size, s, t, prior_samples, display=True):
     avg_t_delay = np.mean(t_delays)
     
     return avg_t_delay, t_delays
+
+
+def performance_metrics(e_values, p_values, metrics=['mse', 'mae', 'irm'], margin=5):
+    """Computes the performance of the tdr algorithm using the specified
+    algorithms. The acceptable metrics are mean squared error (mse), mean 
+    absolute error (mae) and inner ratio metrics (irm)
+    Args: e_values- list/array of expected values
+          p_values- list/array of predicted values
+          metrics- a list containing metrics
+          margin- error margin for inner ratio metrics
+    Returns the mean squared error
+    """
+    
+    if str(type(e_values))[8:-2] != 'numpy.ndarray' and type(e_values) != list and type(e_values) != int and type(e_values) != float  and str(type(e_values))[8:-4] != 'numpy.float' and str(type(e_values))[8:-4] != 'numpy.int':
+        raise Exception("e_values should be an integer, a list or an array. {} was provided instead". format(str(type(e_values))[8:-2].capitalize()))
+            
+    if str(type(p_values))[8:-2] != 'numpy.ndarray' and type(p_values) != list and type(p_values) != int and type(p_values) != float and str(type(p_values))[8:-4] != 'numpy.float' and str(type(p_values))[8:-4] != 'numpy.int':
+        raise Exception("p_values should be an integer, a list or an array. {} was provided instead". format(str(type(p_values))[8:-2].capitalize()))
+        
+    if type(e_values) == int or type(e_values) == float or str(type(e_values))[8:-4] == 'numpy.float' or str(type(e_values))[8:-4] == 'numpy.int':
+        if type(p_values) != int and type(p_values) != float and str(type(p_values))[8:-4] != 'numpy.float' and str(type(p_values))[8:-4] != 'numpy.int':
+            if len(p_values) != 1:
+                raise Exception("e_values is an integer. Expected a list/array with a shape of (1,) for p_values.  Got a {} {} instead.". format(np.shape(p_values), str(type(p_values))[8:-2]))
+     
+    if  type(p_values) == int or type(p_values) == float or str(type(p_values))[8:-4] == 'numpy.float' or str(type(p_values))[8:-4] == 'numpy.int':
+        if type(e_values) != int and type(e_values) != float and str(type(e_values))[8:-4] != 'numpy.float' and str(type(e_values))[8:-4] != 'numpy.int':
+            if len(e_values) != 1:
+                raise Exception("p_values is an integer. Expected a list/array with a shape of (1,) for e_values.  Got a {} {} instead.". format(np.shape(e_values), str(type(e_values))[8:-2]))
+    
+    if type(e_values) == int or type(e_values) == float or str(type(e_values))[8:-4] == 'numpy.float' or str(type(e_values))[8:-4] == 'numpy.int':
+        e_values = np.array([e_values])
+ 
+    if  type(p_values) == int or type(p_values) == float or str(type(p_values))[8:-4] == 'numpy.float' or str(type(p_values))[8:-4] == 'numpy.int':
+        p_values = np.array([p_values])
+
+    if type(e_values) == list:
+        e_values = np.array(e_values)
+            
+    if str(type(p_values))[8:-2] == list:   
+        p_values = np.array(p_values)
+     
+    #elements_check(e_values, p_values)
+    metrics_values_list = []
+    if len(e_values) == len(p_values):
+        metrics_dic = {}
+        
+        for metric in metrics:
+            if metric.lower() != 'mae' and metric.lower() != 'mse' and metric.lower() != 'irm':
+                raise ValueError("{} is not a recognised value for metrics. The recognised values are 'mse' for mean square error, 'mae' for mean absolute error an 'irm' for inner ratio metric".format(metric))
+            
+            name = metric.upper()
+            
+            if metric.lower() == 'mse':            
+                mse = np.mean((e_values - p_values) ** 2)
+                rmse = mse ** .5
+                metrics_dic['mse'] = mse
+                metrics_dic['rmse'] = rmse
+                
+            elif metric.lower() == 'mae':
+                mae = np.mean(np.abs((e_values - p_values)))
+                metrics_dic['mae'] = mae
+
+                
+            elif metric.lower() == 'irm':
+                divs_list = []
+                divs = np.abs(p_values - e_values)
+                for div in divs:       
+                    if div <= margin:
+                        divs_list.append(div)
+
+                irm = len(divs_list) / e_values.size
+                metrics_dic['irm'] = irm
+                
+            Metrics = namedtuple('Metrics', metrics_dic)
+            
+            performance = Metrics(**metrics_dic)
+        
+    else:
+        raise Exception("Expected lists/arrays of equal length. Lists/arrays of lengths {} and {} were provided.".format(len(e_values), len(p_values)))   
+        
+    return performance
+
+            
+    
+                                                                                                                        
+                                                                                                                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
