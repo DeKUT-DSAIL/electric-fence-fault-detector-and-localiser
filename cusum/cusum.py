@@ -68,7 +68,7 @@ def random_file_load(paths, num_samples, v_peak):
     return s
 
 
-def rising_edge(s, st_dev, pulse_freq, duty_cycle, sampling_rate, rising_edge_k):
+def rising_edge(s, st_dev, pulse_freq, duty_cycle, sampling_rate, rising_edge_k, num_samples, win_size):
     """Extract indices of the rising edges of a signal
     Args: s- signal
           st_dev- standard deviation of the tdr signal
@@ -76,6 +76,8 @@ def rising_edge(s, st_dev, pulse_freq, duty_cycle, sampling_rate, rising_edge_k)
           duty_cycle- duty cycle of the tdr signal
           sampling_rate- sampling rate
           rising_edge_k- standard deviation weighting factor
+          num_samples- number of samples
+          win_size- window size
     returns a binary array of ones and zeros (edges=1) and indices of the 
     rising edges
     """
@@ -91,6 +93,7 @@ def rising_edge(s, st_dev, pulse_freq, duty_cycle, sampling_rate, rising_edge_k)
     on_win = int(duty_cycle * (1 / pulse_freq) * sampling_rate) 
     
     e_indices = np.delete(e_indices, np.where(e_diff<on_win)[-1]+1) #eliminate duplicate edges
+    e_indices = np.delete(e_indices, np.where(e_indices > num_samples-win_size)) 
     
     return edges, e_indices 
 
@@ -117,7 +120,7 @@ def edges_plot(t, s, edges):
 
 
 
-def changepoint(s, c_len, e_indices, sampling_rate, c, a_vf, reflection_edge_threshold):
+def changepoint(s, c_len, e_indices, sampling_rate, c, a_vf, win_size, reflection_edge_threshold):
     """Dedtect changepoints due to the reflected signal
     Args: s- signal
           c_len- length of the cable
@@ -125,11 +128,11 @@ def changepoint(s, c_len, e_indices, sampling_rate, c, a_vf, reflection_edge_thr
           sampling_rate- sampling rate
           c- speed of light in vacuum
           a_vf- approximate velocity factor
+          win_size- window size
           reflection_edge_threshold- threshold for distance apart between change points 
     returns indices of change points and a signal's segments of interest
     """
-    
-    win_size = int(((c_len * 2) / (a_vf * c)) * sampling_rate)
+
     cp_indices = []
     segs_interest = []
     
