@@ -25,5 +25,5 @@ a 8.3 kHz rectangular signal generated and sampled by the TDR at 31 MSPS.
 </p>
 
 <p align="center"> 
-  <em>Figure 1: An 8.3 kHz rectangular signal generated and sampled by the TDR at 31 MSPS</em>
+  <em>Figure 2: An 8.3 kHz rectangular signal generated and sampled by the TDR at 31 MSPS</em>
 </p>
