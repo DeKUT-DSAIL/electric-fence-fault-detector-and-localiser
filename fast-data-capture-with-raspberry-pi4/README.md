@@ -27,3 +27,21 @@ a 8.3 kHz rectangular signal generated and sampled by the TDR at 31 MSPS.
 <p align="center"> 
   <em>Figure 2: An 8.3 kHz rectangular signal generated and sampled by the TDR at 31 MSPS</em>
 </p>
+
+For farther information on the TDR design, use this [link](https://github.com/DeKUT-DSAIL/hardware-designs/tree/main/electric-fence-fault-detector-and-localiser). To run this code, clone this repository into the Raspberry Pi and run the following commands on the Raspberry Pi terminal:
+
+ ```cpp
+cd electric-fence-fault-detector-and-localiser/fast-data-capture-with-raspberry-pi4
+```
+
+Run the following command once i.e., only during setup.
+
+```cpp
+./env-setup.sh
+```
+
+Finally, run the following command:
+
+```cpp
+./plot-bash.sh
+```
