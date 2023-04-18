@@ -1,3 +1,0 @@
-# TDR
-
-This directory contains materials used to implement a simple TDR algorithm using the data collected from an experiment carried out at the [Dedan Kimathi University of Technology Wildlife Conservancy's](https://conservancy.dkut.ac.ke/) electric fence. The algorithm uses numerical differentiation to detect change points on the sampled signals to obtain the time delay between incident and reflected signals. Using this time delay, the distance to the simulated faults from the input port has been computed. Each notebook solves a maximum of two faults simulated at different points on the fence to ensure the notebooks are short and easy to follow.
