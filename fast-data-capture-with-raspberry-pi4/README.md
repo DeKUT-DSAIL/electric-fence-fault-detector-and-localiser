@@ -39,6 +39,14 @@ cd electric-fence-fault-detector-and-localiser/fast-data-capture-with-raspberry-
 ```
 
 ```cpp
+chmod +x sample.sh
+```
+
+```cpp
+chmod +x test.sh
+```
+
+```cpp
 gcc -Wall -pedantic -o adc adc.c dma_utils.c -fcommon
 ```
 
