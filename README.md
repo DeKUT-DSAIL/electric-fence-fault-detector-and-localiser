@@ -16,7 +16,7 @@ A TDR Electric Fence Fault Detector and Localiser has been fabricated on a print
   <em>Figure 1: A TDR Electric Fence Fault Detector and Localiser</em>
 </p>
 
-A section of the [Dedan Kimathi University of Technology](https://www.dkut.ac.ke/) Conservancy's electric fence was used to simulate differrent faults (open circuit and short circuits). Using the TDR system, a square wave was applied to the fence and sampled at the input port. The sampled signals were saved for analysis. The [signals-visualisation](https://github.com/DeKUT-DSAIL/electric-fence-fault-detector-and-localiser/tree/main/signals-visualisation) directory contains a notebook that visualises the signals. The [tdr](https://github.com/DeKUT-DSAIL/electric-fence-fault-detector-and-localiser/tree/main/tdr) directory contains notebooks that uses a simple method of change point detection using numerical derivative to obtain time delay between incident and reflected signals. The distance to the point of the simulated fault from the input port was computed using the obtained time delay.
+Sections of the [Dedan Kimathi University of Technology Wildlife Conservancy (DeKUTWC)](https://conservancy.dkut.ac.ke/) and [Ol Pejeta Consrvancy](https://www.olpejetaconservancy.org/) electric fences were used to simulate open circuit and short circuit faults. Using the TDR system, a step-signal was applied to the fence and sampled at the input port.
 
 <p align="center">
   <img width="400" height="393" src="./images/tdr-system-adapter-box.jpg"> 
@@ -43,3 +43,30 @@ A section of the [Dedan Kimathi University of Technology](https://www.dkut.ac.ke
 <p align="center"> 
   <em>Figure 4: A simulation of a short circuit</em>
 </p>
+
+The sampled signals were saved for analysis. The method of change point detection was used to analyse the signal to detect reflected signals on the sampled signals. To run the code programs on the Raspberry Pi, run the following commands on terminal.
+
+ ```cpp
+cd electric-fence-fault-detector-and-localiser
+```
+
+Run the following command once i.e., only during setup.
+
+```cpp
+./raspi-update.sh
+```
+The Raspberry Pi will reboot after updating.
+
+```cpp
+./raspi-env-setup.sh
+```
+
+Finally, run the following command:
+
+```cpp
+source tdr-env/bin/activate
+```
+
+```cpp
+python tdr.py
+```
