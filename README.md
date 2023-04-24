@@ -16,7 +16,7 @@ A TDR Electric Fence Fault Detector and Localiser has been fabricated on a print
   <em>Figure 1: A TDR Electric Fence Fault Detector and Localiser</em>
 </p>
 
-Sections of the [Dedan Kimathi University of Technology Wildlife Conservancy (DeKUTWC)](https://conservancy.dkut.ac.ke/) and [Ol Pejeta Consrvancy](https://www.olpejetaconservancy.org/) electric fences were used to simulate open circuit and short circuit faults. Using the TDR system, a step-signal was applied to the fence and sampled at the input port.
+Sections of the [Dedan Kimathi University of Technology Wildlife Conservancy (DeKUTWC)](https://conservancy.dkut.ac.ke/) and [Ol Pejeta Consrvancy](https://www.olpejetaconservancy.org/) electric fences were used to simulate open circuit and short circuit faults. Using the TDR system, a step-signal was applied to the fence and sampled at the input.
 
 <p align="center">
   <img width="400" height="393" src="./images/tdr-system-adapter-box.jpg"> 
