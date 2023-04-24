@@ -17,11 +17,6 @@
 //
 // v0.06 JPB 16/7/20 Tidied up for Github
 
-//Changes made to the source code:
-//-Number of samples, NSAMPLES from 500 to 10000
-//-Voltage calibration
-//-Eliminated printf() functions except that of the sampled values
-
 #include <stdio.h>
 #include <signal.h>
 #include <stdint.h>

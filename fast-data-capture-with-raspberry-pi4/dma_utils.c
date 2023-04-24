@@ -14,10 +14,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
-//Changes made to the source code:
-// -Removed some printf() functions
-
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
