@@ -55,7 +55,7 @@ Run the following command once i.e., only during setup.
 ```cpp
 ./raspi-update.sh
 ```
-The Raspberry Pi will reboot after updating.
+The Raspberry Pi will reboot after updating. Run the following command after it has rebooted.
 
 ```cpp
 ./raspi-env-setup.sh
