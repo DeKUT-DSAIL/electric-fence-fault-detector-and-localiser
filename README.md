@@ -61,7 +61,7 @@ The Raspberry Pi will reboot after updating. Run the following command after it 
 ./raspi-env-setup.sh
 ```
 
-Finally, run the following command:
+Finally, run the following commands:
 
 ```cpp
 source tdr-env/bin/activate
